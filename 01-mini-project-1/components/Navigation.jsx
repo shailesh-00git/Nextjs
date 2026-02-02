@@ -5,7 +5,7 @@ import React, { useState } from "react";
 function Navigation() {
   const [IsOpen, setIsOpen] = useState(false);
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-6xl p-4 mx-auto">
         <div className="flex justify-between items-center h-12">
           {/* logog */}

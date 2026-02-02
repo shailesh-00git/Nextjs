@@ -2,10 +2,10 @@ import React from "react";
 
 function About() {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
+    <div className="max-w-4xl mx-auto px-4 py-12">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">About Us</h1>
-        <p className="md:text-3xl text-2xl text-gray-800 mb-8">
+        <p className="md:text-2xl text-md text-gray-800 mb-8">
           Learn more about us.What motivate and guide us to work
         </p>
         <div className="grid grid-cols-1 gap-x-8 md:grid-cols-2">
