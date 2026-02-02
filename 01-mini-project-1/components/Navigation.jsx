@@ -19,7 +19,7 @@ function Navigation() {
             <div className="flex ml-10 justify-between space-x-8">
               <Link href={"/"} className="text-2xl font-bold text-gray-800">
                 Home
-              </Link>{" "}
+              </Link>
               <Link
                 href={"/about"}
                 className="text-2xl font-bold text-gray-800"
@@ -89,7 +89,7 @@ function Navigation() {
           >
             <div className="flex flex-col pt-10 px-6 space-y-6">
               <Link
-                href="/home"
+                href={"/"}
                 className="text-xl font-bold text-gray-800"
                 onClick={() => setIsOpen(false)}
               >
