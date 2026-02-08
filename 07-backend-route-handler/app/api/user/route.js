@@ -1,36 +1,11 @@
 import { NextResponse } from "next/server";
 
 export const users = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    age: 28,
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    age: 32,
-  },
-  {
-    id: 3,
-    name: "Michael Brown",
-    email: "michael@example.com",
-    age: 24,
-  },
-  {
-    id: 4,
-    name: "Emily Davis",
-    email: "emily@example.com",
-    age: 29,
-  },
-  {
-    id: 5,
-    name: "David Wilson",
-    email: "david@example.com",
-    age: 35,
-  },
+  { id: 1, name: "John Doe", email: "john@example.com", age: 28 },
+  { id: 2, name: "Jane Smith", email: "jane@example.com", age: 32 },
+  { id: 3, name: "Michael Brown", email: "michael@example.com", age: 24 },
+  { id: 4, name: "Emily Davis", email: "emily@example.com", age: 29 },
+  { id: 5, name: "David Wilson", email: "david@example.com", age: 35 },
 ];
 
 export async function GET() {
