@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { users } from "../route"; // adjust path if needed
+import { users } from "../user/route";
 
 export async function POST(request) {
   try {
@@ -31,7 +31,7 @@ export async function POST(request) {
 
     // create new user
     const newUser = {
-      id: users.length + 1,
+      id: users.length ? users[users.length - 1].id + 1 : 1,
       name,
       email,
       age,
