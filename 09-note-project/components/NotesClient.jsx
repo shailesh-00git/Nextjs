@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 
-function NotesClient() {
+function NotesClient({ initialnotes }) {
+  const [notes, setNotes] = useState(initialnotes);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,18 +30,19 @@ function NotesClient() {
       });
 
       const result = await response.json();
-      console.log(result);
       setLoading(false);
-      // reset form after success
-      setTitle("");
-      setContent("");
+      if (result.success) {
+        setNotes([result.data, ...notes]);
+        toast.success("Notes creates sucessfully!");
+        DiscardNote();
+      }
     } catch (error) {
       console.log("Failed to create note", error);
     }
   }
 
   return (
-    <div className="space-x-6">
+    <div className="">
       <form onSubmit={CreateNote} className="shadow-md rounded-lg bg-white p-6">
         <h1 className="font-semibold text-gray-600 text-2xl mb-2">
           Write notes...
@@ -83,6 +86,41 @@ function NotesClient() {
           </button>
         </div>
       </form>
+
+      <div className="mt-2 bg-white rounded-lg shadow-md max-w-8xl mx-auto p-6">
+        <h2 className="text-2xl p-1">Total Notes: {notes.length}</h2>
+        {notes.length === 0 ? (
+          <p className="text-gray-600">No notes.First create note !</p>
+        ) : (
+          notes.map((note) => (
+            <div
+              className="rounded-md shadow-md bg-green-50 p-6 mb-2 flex justify-between items-center"
+              key={note._id}
+            >
+              <div>
+                <h3 className="font-bold text-gray-800">
+                  {note.title.toUpperCase()}
+                </h3>
+                <p className="text-gary-800">{note.content}</p>
+                <p className="text-gray-400">
+                  created: {new Date(note.createdAt).toLocaleString()}
+                </p>
+                <p className="text-gray-400">
+                  updated: {new Date(note.updatedAt).toLocaleString()}
+                </p>
+              </div>
+              <div className="flex gap-4">
+                <button className="border-2 py-1 px-4 rounded-lg border-green-500 text-gray-800">
+                  edit
+                </button>
+                <button className="px-4 py-1 rounded-lg bg-red-400 text-white">
+                  delete
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }
