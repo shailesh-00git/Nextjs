@@ -14,6 +14,7 @@ function NotesClient({ initialnotes }) {
     setContent("");
   }
 
+  // function to create note
   async function CreateNote(e) {
     e.preventDefault();
 
@@ -31,6 +32,7 @@ function NotesClient({ initialnotes }) {
 
       const result = await response.json();
       setLoading(false);
+      // dispaly the note created when created immediately
       if (result.success) {
         setNotes([result.data, ...notes]);
         toast.success("Notes creates sucessfully!");
@@ -38,6 +40,22 @@ function NotesClient({ initialnotes }) {
       }
     } catch (error) {
       console.log("Failed to create note", error);
+      toast.error("something went wrong");
+    }
+  }
+
+  // function to delete note
+  async function deleteNote(id) {
+    try {
+      const response = await fetch(`/api/notes/${id}`, { method: "DELETE" });
+      const result = await response.json();
+      if (result.success) {
+        setNotes(notes.filter((notes) => notes._id !== id));
+        toast.success("notes deleted sucessfully");
+      }
+    } catch (error) {
+      console.log("notes are not deleted", error);
+      toast.error("Failed to delete notes");
     }
   }
 
@@ -113,7 +131,10 @@ function NotesClient({ initialnotes }) {
                 <button className="border-2 py-1 px-4 rounded-lg border-green-500 text-gray-800">
                   edit
                 </button>
-                <button className="px-4 py-1 rounded-lg bg-red-400 text-white">
+                <button
+                  className="px-4 py-1 rounded-lg bg-red-400 text-white"
+                  onClick={() => deleteNote(note._id)}
+                >
                   delete
                 </button>
               </div>
