@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { users } from "../../user/route";
 
+//function to delete the notes form the data base
 export async function DELETE(request, { params }) {
   const res = await params;
   const id = res.id;
@@ -11,7 +12,7 @@ export async function DELETE(request, { params }) {
       return NextResponse.json(
         {
           success: false,
-          meassge: " user not found",
+          meassge: "user not found",
         },
         { status: 404 },
       );
