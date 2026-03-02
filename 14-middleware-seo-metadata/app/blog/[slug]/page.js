@@ -1,8 +1,12 @@
 // dynamic metadat/ tab title
 export async function generateMetadata({ params }) {
   const { slug } = await params;
+  const ogImageUrl = `http://localhost:3000/api/og?title=${encodeURIComponent(`Blog ${slug}&description=This is the blog post about ${slug}`)}`;
   return {
     title: ` Blog ${slug}`,
+    openGraph: {
+      images: [ogImageUrl],
+    },
   };
 }
 //++++++ donot use  both at same time ++++++++++++++
