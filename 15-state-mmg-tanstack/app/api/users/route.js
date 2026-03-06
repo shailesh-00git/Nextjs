@@ -1,44 +1,60 @@
-import { DANGEROUSLY_runPendingImmediatesAfterCurrentTask } from "next/dist/server/node-environment-extensions/fast-set-immediate.external";
-
+// In-memory storage for users (replace with database in production)
 let users = [
-  { id: 100, name: "rajiv", email: "rajiv@gmail.com" },
-  { id: 101, name: "hari", email: "hari@gmail.com" },
-  { id: 102, name: "ram", email: "ram@gmail.com" },
-  { id: 103, name: "sheela", email: "sheela@gmail.com" },
-  { id: 104, name: "shital", email: "shital@gmail.com" },
-  { id: 105, name: "athiti", email: "athiti@gmail.com" },
-  { id: 106, name: "sarmila", email: "sarmila@gmail.com" },
+  { id: 1, name: "John Doe", email: "john@example.com" },
+  { id: 2, name: "Jane Smith", email: "jane@example.com" },
+  { id: 3, name: "Bob Johnson", email: "bob@example.com" },
 ];
 
-// function to get users data
+let nextId = 4;
+
 export async function GET() {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return Response.json(users);
+  try {
+    await new Promise((response) => setTimeout(response, 1000));
+    return Response.json(users, { status: 200 });
+  } catch (error) {
+    return Response.json({ error: "Failed to fetch users" }, { status: 500 });
+  }
 }
 
-// function to create data for users
-export async function POST(request) {
-  const body = await request.json();
-  const newUser = {
-    id: Date.now(),
-    name: body.name,
-    email: body.email,
-  };
-  users.unshift(newUser);
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return Response.json(newUser);
-}
-
-// delete user
 export async function DELETE(request) {
-  const body = await request.json();
-  const userId = body.id;
+  try {
+    const { id } = await request.json();
 
-  // remove the user from array
-  users = users.filter((user) => user.id !== userId);
+    if (!id) {
+      return Response.json({ error: "User ID is required" }, { status: 400 });
+    }
+    // recieved id  is in string format
+    const numericId = parseInt(id);
 
-  // simulate delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
+    users = users.filter((user) => user.id !== numericId);
+    await new Promise((response) => setTimeout(response, 1000));
 
-  return Response.json({ message: "User deleted successfully" });
+    return Response.json(
+      { message: "User deleted successfully" },
+      { status: 200 },
+    );
+  } catch (error) {
+    return Response.json({ error: "Failed to delete user" }, { status: 500 });
+  }
+}
+
+export async function POST(request) {
+  try {
+    const { name, email } = await request.json();
+
+    if (!name || !email) {
+      return Response.json(
+        { error: "Name and email are required" },
+        { status: 400 },
+      );
+    }
+
+    const newUser = { id: nextId++, name, email };
+    users.unshift(newUser);
+    await new Promise((response) => setTimeout(response, 1000));
+
+    return Response.json(newUser, { status: 201 });
+  } catch (error) {
+    return Response.json({ error: "Failed to create user" }, { status: 500 });
+  }
 }

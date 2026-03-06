@@ -5,6 +5,7 @@ import { useState } from "react";
 export default function AddUser() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
   const queryClient = useQueryClient();
   // this function users to the array list
   async function addUser(userData) {
@@ -27,21 +28,44 @@ export default function AddUser() {
     //this onsucces is used to live change on page as the list changes
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      // then after the sucessful add cear the form data
       setName("");
       setEmail("");
+      setError("");
+    },
+    onError: (err) => {
+      setError(err.message || "Failed to add user");
     },
   });
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (name && email) {
-      mutation.mutate({ name, email });
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+
+    if (!trimmedName || !trimmedEmail) {
+      setError("Please fill in all fields");
+      return;
     }
+
+    if (!trimmedEmail.includes("@")) {
+      setError("Please enter a valid email");
+      return;
+    }
+
+    setError("");
+    mutation.mutate({ name: trimmedName, email: trimmedEmail });
   }
 
   return (
     <div className="rounded-lg shadow-lg p-5">
       <h1 className="text-center mb-4 font-semibold text-2xl">Add User</h1>
+
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
