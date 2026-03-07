@@ -9,7 +9,7 @@ const TODOSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [description, "Title is required"],
+      required: false,
       trim: true,
       maxlength: [500, "Description cannot more than 500 characters"],
     },
@@ -17,8 +17,11 @@ const TODOSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    priority: { type: String, enum: ["low", "medium", "high"] },
-    default: "medium",
+    priority: {
+      type: String,
+      enum: ["low", "medium", "high"],
+      default: "medium",
+    },
   },
   {
     // this aad the createdAt and UpdatedAt time autometically

@@ -48,6 +48,7 @@ const ContactForm = () => {
             {message}
           </div>
         )}
+
         <form
           onSubmit={handleSubmit}
           className="space-y-4 w-full"

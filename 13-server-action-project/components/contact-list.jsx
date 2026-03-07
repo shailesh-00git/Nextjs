@@ -1,6 +1,7 @@
-import { GetContacts } from "@/actions";
+import { GetContacts, updateContacts } from "@/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Form } from "lucide-react";
 
 async function ContactList() {
   const contacts = await GetContacts();
@@ -37,14 +38,34 @@ async function ContactList() {
               </p>
               <div>
                 {c.status === "new" && (
-                  <Button variant="outline" size="sm">
-                    mark as read
-                  </Button>
+                  <form
+                    action={async () => {
+                      "use server";
+                      await updateContacts({
+                        contactId: c._id,
+                        status: "read",
+                      });
+                    }}
+                  >
+                    <Button variant="outline" size="sm">
+                      mark as read
+                    </Button>
+                  </form>
                 )}
                 {c.status === "read" && (
-                  <Button variant="outline" size="sm">
-                    mark as reply
-                  </Button>
+                  <form
+                    action={async () => {
+                      "use server";
+                      await updateContacts({
+                        contactId: c._id,
+                        status: "replied",
+                      });
+                    }}
+                  >
+                    <Button variant="outline" size="sm">
+                      mark as reply
+                    </Button>
+                  </form>
                 )}
               </div>
             </div>

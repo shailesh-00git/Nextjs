@@ -1,6 +1,8 @@
 "use server";
 import dbConnect from "@/lib/db";
 import Contact from "@/models/Contact";
+import { revalidatePath } from "next/cache";
+import { success } from "zod";
 
 export async function CreateContact(formData) {
   try {
@@ -52,5 +54,24 @@ export async function GetContacts() {
   } catch (error) {
     console.error("Error fetching contacts:", error);
     return [];
+  }
+}
+
+// function to update contacts
+export async function updateContacts({ contactId, status }) {
+  try {
+    await dbConnect();
+    await Contact.findByIdAndUpdate(contactId, { status });
+    revalidatePath("/contacts");
+    return {
+      success: true,
+      message: "updatedd sucessfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      error: "Failes to update contact",
+    };
   }
 }
