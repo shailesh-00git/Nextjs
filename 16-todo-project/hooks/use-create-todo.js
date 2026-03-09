@@ -1,7 +1,6 @@
-import { createTodo } from "@/actions/todo-actions";
-import { createTodoSchema } from "@/validations/todo";
+import { createTodo, getTodo } from "@/actions/todo-actions";
 import { useTodoStore } from "@/store/todo-store";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const todoKeys = {
   all: ["todo"],
@@ -17,6 +16,23 @@ export function useCreateTodo() {
         addTodo(result.data);
         queryClient.invalidateQueries({ queryKey: todoKeys.list() });
       }
+    },
+  });
+}
+
+//function to get todos
+export function useTodos() {
+  const setTodos = useTodoStore((state) => state.setTodos);
+  return useQuery({
+    queryKey: todoKeys.list(),
+    queryFn: async () => {
+      const result = await getTodo();
+      if (result.success) {
+        // update the zustand state with the updated data
+        setTodos(result.data);
+        return result.data;
+      }
+      throw new Error(result.error);
     },
   });
 }

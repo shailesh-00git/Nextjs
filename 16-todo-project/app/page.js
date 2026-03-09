@@ -1,9 +1,10 @@
 import { TodoForm } from "@/components/todo-form";
-import connectdb from "@/lib/db";
+import { TodoList } from "@/components/list";
+import TodoFilter from "@/components/todo-filter";
 
 export default async function Home() {
   return (
-    <div className="min-h-screen bg-cyan-50">
+    <div className="min-h-screen bg-gray-100">
       <div className="max-w-2xl mx-auto py-4 px-8">
         <header className="text-center mb-8 p-3">
           <h1 className="text-4xl font-bold text-gray-800">TODO APP</h1>
@@ -13,6 +14,8 @@ export default async function Home() {
         </header>
         <main>
           <TodoForm />
+          <TodoFilter />
+          <TodoList />
         </main>
       </div>
       <footer className="text-center mt-12 text-gray-400">
