@@ -1,4 +1,5 @@
 import "./App.css";
+import Cart from "./components/cart";
 import Header from "./components/Header";
 import ItemList from "./components/ItemList";
 import Main from "./components/Main";
@@ -8,6 +9,7 @@ function App() {
       <Header />
       <Main>
         <ItemList />
+        <Cart />
       </Main>
     </div>
   );

@@ -1,39 +1,26 @@
 import React, { useState } from "react";
+import useItemStore from "../store/ItemStore";
 
 const Item = ({ item }) => {
-  const [hovered, setHovered] = useState(false);
-  const [selectedColor, setSelectedColor] = useState(item.colors[0].name);
   const [added, setAdded] = useState(false);
+  const addItem = useItemStore((state) => state.addItem);
 
-  const handleAdd = () => {
+  const handleAdd = (itemId) => {
+    //add item
     setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
+    setTimeout(() => {
+      setAdded(false);
+    }, 200);
+    console.log("item id", itemId);
+    addItem(item);
   };
 
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        fontFamily: "'DM Sans', sans-serif",
-        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-        transform: hovered ? "translateY(-6px)" : "translateY(0)",
-        boxShadow: hovered
-          ? "0 24px 48px rgba(0,0,0,0.2)"
-          : "0 4px 16px rgba(0,0,0,0.1)",
-      }}
-      className="bg-white rounded-2xl overflow-hidden w-64"
-    >
+    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden w-60">
       {/* Image area */}
-      <div className="relative overflow-hidden bg-stone-50 h-56 flex items-center justify-center">
+      <div className="relative overflow-hidden bg-stone-50 h-40 flex items-center justify-center">
         {/* Decorative circle */}
-        <div
-          style={{
-            transition: "transform 0.4s ease",
-            transform: hovered ? "scale(1.08)" : "scale(1)",
-          }}
-          className="w-32 h-32 rounded-full bg-stone-200 flex items-center justify-center"
-        >
+        <div className="w-32 h-32 rounded-full bg-stone-200 flex items-center justify-center">
           <span style={{ fontSize: 48 }}>{item.emoji}</span>
         </div>
 
@@ -69,7 +56,7 @@ const Item = ({ item }) => {
         </p>
 
         {/* Color selector */}
-        <div className="flex items-center gap-2 mb-4">
+        {/* <div className="flex items-center gap-2 mb-4">
           <span className="text-xs text-stone-400 mr-1">Color</span>
           {item.colors.map((c) => (
             <button
@@ -82,7 +69,7 @@ const Item = ({ item }) => {
               }`}
             />
           ))}
-        </div>
+        </div> */}
 
         {/* Price + CTA */}
         <div className="flex items-center justify-between">
@@ -96,7 +83,7 @@ const Item = ({ item }) => {
           </div>
 
           <button
-            onClick={handleAdd}
+            onClick={() => handleAdd(item)}
             style={{ transition: "all 0.2s ease" }}
             className={`text-xs font-semibold px-4 py-2 rounded-xl tracking-wide uppercase ${
               added
