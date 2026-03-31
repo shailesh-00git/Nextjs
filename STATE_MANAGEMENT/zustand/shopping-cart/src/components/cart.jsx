@@ -2,6 +2,8 @@ import useItemStore from "../store/ItemStore";
 const Cart = () => {
   const items = useItemStore((state) => state.items);
   const removeItem = useItemStore((state) => state.removeItem);
+  const increaseQuantity = useItemStore((state) => state.increaseQuantity);
+  const decreaseQuantity = useItemStore((state) => state.decreaseQuantity);
 
   const totalPrice = items.reduce((acc, i) => acc + i.price * i.quantity, 0);
 
@@ -12,7 +14,7 @@ const Cart = () => {
   return (
     <div>
       {items.length !== 0 && (
-        <div className="max-w-lg mx-auto p-6 border border-gray-400 rounded ">
+        <div className="max-w-lg mx-auto p-5 border border-gray-400 rounded ">
           <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
           {items.map((item) => (
             <div
@@ -27,11 +29,17 @@ const Cart = () => {
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <button className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 font-bold">
+                <button
+                  onClick={() => decreaseQuantity(item.id)}
+                  className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 font-bold"
+                >
                   −
                 </button>
                 <span className="w-4 text-center">{item.quantity}</span>
-                <button className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 font-bold">
+                <button
+                  onClick={() => increaseQuantity(item.id)}
+                  className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 font-bold"
+                >
                   +
                 </button>
               </div>

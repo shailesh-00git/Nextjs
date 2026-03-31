@@ -24,13 +24,30 @@ const itemStore = (set) => ({
     });
   },
 
-  // 2. remove item
+  // 2. remove item (function)
   removeItem: (itemId) => {
     set((state) => ({ items: state.items.filter((i) => i.id !== itemId) }));
   },
+
+  // increase quantity
+  increaseQuantity: (itemId) => {
+    set((state) => ({
+      items: state.items.map((i) =>
+        i.id === itemId ? { ...i, quantity: i.quantity + 1 } : i,
+      ),
+    }));
+  },
+  // decrease quantity
+  decreaseQuantity: (itemId) => {
+    set((state) => ({
+      items: state.items
+        .map((i) => (i.id === itemId ? { ...i, quantity: i.quantity - 1 } : i))
+        .filter((i) => i.quantity > 0),
+    }));
+  },
 });
 
-// creating useItemStore hoo
+// creating useItemStore hook
 const useItemStore = create(devtools(persist(itemStore, { name: "items" })));
 
 //exporting hook
