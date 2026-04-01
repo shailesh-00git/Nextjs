@@ -1,22 +1,18 @@
-import React from "react";
+import useTaskStore from "../store/taskStore";
 import Task from "./Task";
 
 const TaskList = () => {
+  const tasks = useTaskStore((state) => state.tasks);
+
+  if (tasks.length === 0) {
+    return <p className="text-center text-2xl p-34">No tasks yet 🚀</p>;
+  }
+
   return (
-    <div className="space-y-2">
-      <h2 className="text-lg mb-2 p-2  text-center font-bold ">
-        Process Section
-      </h2>
-      <div className="grid grid-cols-2 gap-4">
-        <Task />
-        <Task />
-        <Task />
-        <Task />
-        <Task />
-        <Task />
-        <Task />
-        <Task />
-      </div>
+    <div className="grid grid-cols-2 gap-3 p-4">
+      {tasks.map((task) => (
+        <Task key={task.id} task={task} />
+      ))}
     </div>
   );
 };

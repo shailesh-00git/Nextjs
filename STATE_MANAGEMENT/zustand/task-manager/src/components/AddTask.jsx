@@ -1,39 +1,31 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import useTaskStore from "../store/taskStore";
 
 function AddTask() {
+  const addTask = useTaskStore((state) => state.addTask);
+
   const [title, setTitle] = useState("");
   const [detail, setDetail] = useState("");
-  const formRef = useRef(null);
-  const addTask = useTaskStore((state) => state.addTask);
   //function to handle  submit data
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // 1. Check if values exist before sending
-    if (!title.trim() || !detail.trim()) {
-      alert("Please fill in both fields");
-      return;
-    }
 
-    // 2. Send the object
-    addTask({
-      title: title,
-      detail: detail,
-    });
+    if (!title.trim()) return;
 
-    // from reset
-    formRef.current?.reset();
+    addTask({ title, detail });
+
     setTitle("");
     setDetail("");
-  }
+  };
   return (
     <div className="border p-2 rounded border-gray-300 col-span-1">
       <h2 className="text-lg mb-2  p-2 text-center font-bold">Add Task</h2>
-      <form className="space-y-4" ref={formRef} onSubmit={handleSubmit}>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <div className=" px-4">
           <input
             className="border w-full rounded border-gray-100 py-2 px-3"
             type="text"
+            value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Title"
           />
@@ -43,6 +35,7 @@ function AddTask() {
             className="border w-full rounded border-gray-100 py-2 px-3"
             type="text"
             rows={4}
+            value={detail}
             onChange={(e) => setDetail(e.target.value)}
             placeholder="Details of task ..."
           />

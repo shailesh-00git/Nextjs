@@ -3,7 +3,6 @@ import Main from "./components/Main";
 import Header from "./components/Header";
 import ProcessSection from "./components/ProcessSection";
 import AddTask from "./components/AddTask";
-import CompletedSection from "./components/CompletedSection";
 import TaskList from "./components/TaskList";
 function App() {
   return (
@@ -17,7 +16,6 @@ function App() {
           </ProcessSection>
         </div>
 
-        <CompletedSection />
       </Main>
     </>
   );
