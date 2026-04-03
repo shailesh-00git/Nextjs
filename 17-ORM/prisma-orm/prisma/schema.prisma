@@ -1,15 +1,8 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"        // ✅ was "prisma-client" (missing -js)
+  output   = "../generated/prisma"     // ✅ match your import "@/generated/prisma/client"
 }
 
 datasource db {
   provider = "postgresql"
-}
-
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
 }
