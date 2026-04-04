@@ -11,4 +11,4 @@ posts Post[]
 }
 npx prisma migrate reset (reset database tables)
 npx prisma migrate dev --name user-created
-npx generate prisma
+npx prisma generate
