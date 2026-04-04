@@ -4,8 +4,9 @@ export async function createPost(formData) {
   const id = formData.get("id");
   const email = formData.get("email");
   const password = formData.get("password");
+  const address = formData.get("address");
 
   await prisma.user.create({
-    data: { email, password },
+    data: { email, password, address },
   });
 }
