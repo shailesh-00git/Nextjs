@@ -9,7 +9,11 @@ email String @unique
 name String?
 posts Post[]
 }
+
+npx prisma generate (generate prisam client)
+
 npx prisma migrate reset (reset database tables)
-npx prisma migrate dev --name user-created
+npx prisma migrate dev --name user-created (migrate table to db)
 npx prisma generate
-npx prisma db push
+
+//better-auth

@@ -26,11 +26,11 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <div className="max-w-7xl bg-gray-200 mx-auto p-5 flex gap-10">
-          <Link href={"/"}>Home</Link>  
-          <Link href={"/"}>Sign Up</Link>
-          <Link href={"/"}>Sign In</Link>
-          <Link href={"/"}>Dashboard</Link>
-          <Logout>logout</Logout>
+          <Link href={"/"}>Home</Link>
+          <Link href={"/auth/signup"}>Sign Up</Link>
+          <Link href={"/auth/signin"}>Sign In</Link>
+          <Link href={"/dashboard"}>Dashboard</Link>
+          <Logout />
         </div>
         {children}
       </body>
