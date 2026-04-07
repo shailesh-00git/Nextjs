@@ -1,15 +1,16 @@
 import User from "@/models/userModel";
-import { nodemailer } from "nodemailer";
-const sendEmail = async ({ email, emailtype, userId }) => {
+import nodemailer from "nodemailer";
+import bcrypt from "bcryptjs";
+export const sendEmail = async ({ email, emailtype, userId }) => {
   //email type check
   const HasedToken = await bcrypt.hash(userId.toString(), 10);
   if (emailtype == "VERIFY_EMAIL") {
-    User.findByIdAndUpdate(userId, {
+    await User.findByIdAndUpdate(userId, {
       verifyToken: HasedToken,
       verifyTokenExpiry: Date.now() + 3600000, // 1 hour
     });
   } else if (emailtype == "RESET_PASSWORD") {
-    User.findByIdAndUpdate(userId, {
+    await User.findByIdAndUpdate(userId, {
       resetPasswordToken: HasedToken,
       resetPasswordTokenExpiry: Date.now() + 3600000, // 1 hour
     });

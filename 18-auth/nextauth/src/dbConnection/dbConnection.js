@@ -4,6 +4,7 @@ export function connectDB() {
     const connection = mongoose.connect(process.env.MONGODB_URI);
     if (connection) {
       console.log("mongodb connected sucessfully");
+      console.log(connection); // Log the host of the connected database
     }
     return connection;
   } catch (error) {
