@@ -1,52 +1,70 @@
 import User from "@/models/userModel";
+import crypto from "crypto";
+import { connectDB } from "@/dbConnection/dbConnection";
 import nodemailer from "nodemailer";
-import bcrypt from "bcryptjs";
 
-export const sendEmail = async ({ email, emailtype, userId }) => {
+export const sendEmail = async ({ email, emailType, userId }) => {
   try {
-    // Fix #2: Typo fixed HasedToken → hashedToken
-    const hashedToken = await bcrypt.hash(userId.toString(), 10);
+    await connectDB();
 
-    if (emailtype === "VERIFY_EMAIL") {
+    const hashedToken = crypto.randomBytes(32).toString("hex");
+
+    if (emailType === "VERIFY") {
       await User.findByIdAndUpdate(userId, {
         verifyToken: hashedToken,
         verifyTokenExpiry: Date.now() + 3600000,
       });
-    } else if (emailtype === "RESET_PASSWORD") {
+    } else if (emailType === "RESET") {
       await User.findByIdAndUpdate(userId, {
-        resetPasswordToken: hashedToken,
-        resetPasswordTokenExpiry: Date.now() + 3600000,
+        forgotPasswordToken: hashedToken,
+        forgotPasswordExpiry: Date.now() + 3600000,
       });
     }
 
-    // Fix #1: Changed host to sandbox for development
-    const transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io", // ✅ was: send.smtp.mailtrap.io
-      port: 2525,
+    // Auto generate test account (no signup needed)
+    const testAccount = await nodemailer.createTestAccount();
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
       auth: {
-        user: process.env.MAILTRAP_USER,
-        pass: process.env.MAILTRAP_PASS,
+        user: testAccount.user,
+        pass: testAccount.pass,
       },
     });
 
-    const mailOptions = {
-      from: process.env.MAIL_FROM || "noreply@yourdomain.com", // Fix #4: use env variable
-      to: email,
-      subject:
-        emailtype === "VERIFY_EMAIL"
-          ? "Verify your email"
-          : "Reset your password",
-      html: `<p>Click <a href="${process.env.DOMAIN}/api/auth/${
-        emailtype === "VERIFY_EMAIL" ? "verifyemail" : "resetpassword"
-      }?token=${hashedToken}">
-        ${emailtype === "VERIFY_EMAIL" ? "Verify your email" : "Reset your password"}
-      </a></p>`,
-    };
+    const subject =
+      emailType === "VERIFY" ? "Verify your email" : "Reset your password";
+    const link = `${process.env.DOMAIN}/verifyemail?token=${hashedToken}`;
 
-    const mailResponse = await transport.sendMail(mailOptions);
+    const mailResponse = await transporter.sendMail({
+      from: '"My App" <no-reply@myapp.com>',
+      to: email,
+      subject,
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <h2>${subject}</h2>
+          <p>Click below to ${emailType === "VERIFY" ? "verify your email" : "reset your password"}:</p>
+          <a href="${link}" style="
+            background-color: #4F46E5;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 16px 0;">
+            Click here
+          </a>
+          <p>Or copy: ${link}</p>
+          <p>Expires in <strong>1 hour</strong>.</p>
+        </div>
+      `,
+    });
+
+    // This URL lets you preview the email in your browser
+    console.log("Preview URL:", nodemailer.getTestMessageUrl(mailResponse));
     return mailResponse;
   } catch (error) {
-    // Fix #3: added try/catch
     throw new Error(`Failed to send email: ${error.message}`);
   }
 };
