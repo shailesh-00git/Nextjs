@@ -1,7 +1,8 @@
 import { connectDB } from "@/dbConnection/dbConnection";
 import User from "@/models/userModel";
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
+import bcryptjs from "bcryptjs";
+import JWT from "jsonwebtoken";
 
 export async function POST(request) {
   try {
@@ -17,25 +18,22 @@ export async function POST(request) {
       );
     }
 
-    // Normalize email
-    const normalizedEmail = email.toLowerCase().trim();
-
     // Check if user exists
-    const user = await User.findOne({ email: normalizedEmail });
+    const user = await User.findOne({ email });
     if (!user) {
       return NextResponse.json(
-        { error: "Invalid email or password", success: false },
+        { error: "User doesnot exist", success: false },
         { status: 400 },
       );
     }
 
-    // Check if email is verified
-    if (!user.isVerified) {
-      return NextResponse.json(
-        { error: "Please verify your email first", success: false },
-        { status: 403 },
-      );
-    }
+    // // Check if email is verified
+    // if (!user.isVerified) {
+    //   return NextResponse.json(
+    //     { error: "Please verify your email first", success: false },
+    //     { status: 403 },
+    //   );
+    // }
 
     // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -46,11 +44,23 @@ export async function POST(request) {
       );
     }
 
-    // Set token in cookie
+    // token
+    const tokenData = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+    };
+
+    const token = JWT.sign(tokenData, process.env.TOKEN_SECRET, {
+      expiresIn: "1d",
+    });
+
     const response = NextResponse.json(
       { message: "Login successful", success: true },
       { status: 200 },
     );
+
+    response.cookies.set("token", token, { httpOnly: true });
 
     return response;
   } catch (error) {
