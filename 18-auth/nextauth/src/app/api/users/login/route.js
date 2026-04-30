@@ -2,7 +2,7 @@ import { connectDB } from "@/dbConnection/dbConnection";
 import User from "@/models/userModel";
 import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
-import JWT from "jsonwebtoken";
+import  JWT from "jsonwebtoken";
 
 export async function POST(request) {
   try {
@@ -17,6 +17,7 @@ export async function POST(request) {
         { status: 400 },
       );
     }
+    // console.log(email, password);
 
     // Check if user exists
     const user = await User.findOne({ email });
@@ -26,17 +27,18 @@ export async function POST(request) {
         { status: 400 },
       );
     }
+    // console.log(user);
 
-    // // Check if email is verified
-    // if (!user.isVerified) {
-    //   return NextResponse.json(
-    //     { error: "Please verify your email first", success: false },
-    //     { status: 403 },
-    //   );
-    // }
+    // Check if email is verified
+    if (!user.isVerified) {
+      return NextResponse.json(
+        { error: "Please verify your email first", success: false },
+        { status: 403 },
+      );
+    }
 
     // Check password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
     if (!isPasswordValid) {
       return NextResponse.json(
         { error: "Invalid email or password", success: false },

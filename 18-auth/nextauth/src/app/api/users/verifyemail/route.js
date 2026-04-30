@@ -1,4 +1,5 @@
 import { connectDB } from "@/dbConnection/dbConnection";
+import User from "@/models/userModel";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
@@ -8,7 +9,7 @@ export async function POST(request) {
     const { token } = await request.json();
 
     // vefify the token and check time
-    const user = await User.findone({
+    const user = await User.findOne({
       verifyToken: token,
       verifyTokenExpiry: { $gt: Date.now() },
     });
