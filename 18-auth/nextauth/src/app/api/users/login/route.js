@@ -42,7 +42,7 @@ export async function POST(request) {
     if (!isPasswordValid) {
       return NextResponse.json(
         { error: "Invalid email or password", success: false },
-        { status: 400 },
+        { status: 401 },
       );
     }
 

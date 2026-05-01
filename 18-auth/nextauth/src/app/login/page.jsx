@@ -1,37 +1,51 @@
 "use client";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function LoginPage() {
+  const router = useRouter();
+
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   //function
   async function handleLogin(e) {
     e.preventDefault();
     try {
       setIsLoading(true);
+      setHasError(false);
       const response = await axios.post("/api/users/login", user);
-      console.log(response);
+      // console.log(response);
 
       if (response.status === 200) {
         toast.success("Login successful");
+        router.push("/profile");
         setUser({ email: "", password: "" });
       }
     } catch (error) {
-      toast.error("failed to login");
+      if (error.response.status == 400) {
+        toast.error("User doesnot exist");
+      } else if (error.response.status == 401) {
+        toast.error("Invalid email or password");
+      } else if (error.response.status == 403) {
+        toast.error("Unverified user!, verify first");
+      }
+      setHasError(true);
     } finally {
       setIsLoading(false);
     }
   }
   //  only able to click onSubmit
   useEffect(() => {
+    setHasError(false);
     if (user.email.length > 0 && user.password.length > 0) {
       setBtnDisabled(false);
     } else {
@@ -60,8 +74,8 @@ export default function LoginPage() {
           />
 
           <button
-            className="p-2 w-full mt-3 text-xl rounded-2xl bg-blue-400 text-white disabled:opacity-90"
-            disabled={isLoading || btnDisabled}
+            className="p-2 w-full mt-3 text-xl rounded-2xl bg-blue-400 text-white disabled:opacity-70"
+            disabled={isLoading || btnDisabled || hasError}
           >
             {isLoading ? "Loging..." : "Login"}
           </button>
