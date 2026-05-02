@@ -2,6 +2,7 @@ import JWT from "jsonwebtoken";
 
 export const getDatafromToken = (request) => {
   try {
+    
     //get cookies
     const token = request.cookies.get("token").value || "";
 
